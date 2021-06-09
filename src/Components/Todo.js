@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { Button, Form } from 'react-bootstrap';
 import '../App.css';
+import axios from 'axios'
 
 
 export const Todo = () => {
@@ -9,16 +10,27 @@ export const Todo = () => {
     const [showArr, SetShowArr] = useState([]);
     const [editIndex, SetEditIndex] = useState();
 
-
     const ShowArrFunc = () => {
         let temp = [...showArr]
         if (input?.trim().length) {
             temp.push(input)
-            SetShowArr(temp)
+            let tempTodo = {
+                title: input
+            }
+            axios.post("http://localhost:3030/create", tempTodo)
+            // SetShowArr(temp)
             setInput("")
         }
 
     }
+    React.useEffect(() => {
+        fetch("/todos").then(res => {
+            if (res.ok) {
+                console.log("resp is ", res)
+                return res.json()
+            }
+        }).then(resData => SetShowArr(resData))
+    }, [input])
 
 
     const Remove = (remIndex) => {
@@ -49,6 +61,9 @@ export const Todo = () => {
         SetShowArr([])
     }
 
+    // Object.values(showArr).map((item, index) => {
+    //     console.log("item ", item?.title)
+    // })
     return (
         <form onSubmit={(e) => {
             e.preventDefault()
@@ -57,9 +72,9 @@ export const Todo = () => {
             } else ShowArrFunc()
         }}>
             <Form.Control type="text" onChange={(e) => { setInput(e.target.value) }} value={input} autoFocus={true} /><br />
-            {showArr.map((item, index) =>
-                <div key={index} ><span className="todoInputList">{item}</span>
-                    <Button type="button" className="todoEditbtn" onClick={() => Edit(index)}  variant="secondary" > Edit </Button>
+            {Object.values(showArr).map((item, index) =>
+                <div key={index} ><span className="todoInputList">{item?.title}</span>
+                    <Button type="button" className="todoEditbtn" onClick={() => Edit(index)} variant="secondary" > Edit </Button>
                     <Button variant="danger" className="todoDeletebtn" type="button" onClick={() => Remove(index)} > X </Button></div>
             )}
             <br />
