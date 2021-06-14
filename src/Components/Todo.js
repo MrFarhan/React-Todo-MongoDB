@@ -9,19 +9,21 @@ export const Todo = () => {
     const [input, setInput] = useState();
     const [showArr, SetShowArr] = useState([]);
     const [editIndex, SetEditIndex] = useState();
+    const [isLoading, setIsLoading] = useState(false)
 
     const ShowArrFunc = () => {
-        let temp = showArr?.length ? [...showArr] : null
+        let temp = showArr?.length ? [...showArr] : []
         if (input?.trim().length) {
             temp.push(input)
             let tempTodo = {
                 title: input
             }
-            axios.post("http://localhost:3030/create", tempTodo)
+            axios.post("/create", tempTodo)
             setInput("")
+
         }
     }
-
+    console.log("is loading is ", isLoading)
 
     const Remove = (remIndex) => {
         console.log("removed index", remIndex)
@@ -45,20 +47,28 @@ export const Todo = () => {
 
     }
 
+
+
+    const DeleteAll = async () => {
+        SetShowArr([])
+        await axios.delete("/deleteAll", {})
+        setInput("")
+
+    }
+
     React.useEffect(() => {
         fetch("/todos").then(res => {
             if (res.ok) {
                 return res.json()
             }
         }).then(resData => SetShowArr(resData))
-    }, [input, Remove, Update])
+    }, [input, Remove, Update, DeleteAll])
 
-    const DeleteAll = () => {
-        SetShowArr([])
-        // axios.delete("http://localhost:3030/deleteAll", {})
-        setInput("")
+    const Loader = () => {
+        return <h5>Loading</h5>
     }
-    return (
+
+    return (!isLoading ?
         <form onSubmit={(e) => {
             e.preventDefault()
             if (editIndex || editIndex === 0) {
@@ -76,5 +86,5 @@ export const Todo = () => {
             {(editIndex || editIndex === 0) ? <Button type="submit" className="add"  >Update</Button> : <Button type="submit" className="update">Add</Button>}
             &nbsp; <Button onClick={() => DeleteAll()} className="deleteall">Delete All</Button>
         </form >
-    )
+        : Loader())
 }

@@ -25,6 +25,17 @@ router.route("/delete/:id").delete((req, res) => {
     })
 })
 
+ router.route("/deleteall").delete(async (req, res) => {
+
+    await Todo.remove({ }, (req, res, err) => {
+        if (!err) {
+            console.log("success fully deleted all")
+        } else {
+            console.log("error occured while deleting all todo , ", err)
+        }
+    })
+})
+
 router.route("/put/:id").put((req, res) => {
     const title = req.body.title;
     const id = req.params.id;
