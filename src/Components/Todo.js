@@ -23,6 +23,13 @@ export const Todo = () => {
         }
 
     }
+    
+    
+    const Remove = (remIndex) => {
+        console.log("removed index", remIndex)
+        axios.delete(`/delete/${remIndex}`)
+    }
+    
     React.useEffect(() => {
         fetch("/todos").then(res => {
             if (res.ok) {
@@ -30,15 +37,7 @@ export const Todo = () => {
                 return res.json()
             }
         }).then(resData => SetShowArr(resData))
-    }, [input])
-
-
-    const Remove = (remIndex) => {
-        let temp = [...showArr]
-        temp = temp.filter((item, index) => index !== remIndex)
-        SetShowArr(temp)
-    }
-
+    }, [input,Remove])
 
     const Edit = (EditIndex) => {
         let temp = [...showArr]
@@ -59,11 +58,10 @@ export const Todo = () => {
 
     const DeleteAll = () => {
         SetShowArr([])
+        axios.delete("http://localhost:3030/deleteAll", {})
+        setInput("")
     }
 
-    // Object.values(showArr).map((item, index) => {
-    //     console.log("item ", item?.title)
-    // })
     return (
         <form onSubmit={(e) => {
             e.preventDefault()
@@ -72,15 +70,16 @@ export const Todo = () => {
             } else ShowArrFunc()
         }}>
             <Form.Control type="text" onChange={(e) => { setInput(e.target.value) }} value={input} autoFocus={true} /><br />
-            {Object.values(showArr).map((item, index) =>
-                <div key={index} ><span className="todoInputList">{item?.title}</span>
+            {showArr?.length ? Object.values(showArr).map((item, index) =>
+                < div key={index} ><span className="todoInputList">{item?.title}</span>
                     <Button type="button" className="todoEditbtn" onClick={() => Edit(index)} variant="secondary" > Edit </Button>
-                    <Button variant="danger" className="todoDeletebtn" type="button" onClick={() => Remove(index)} > X </Button></div>
-            )}
+                    <Button variant="danger" className="todoDeletebtn" type="button" onClick={() => Remove(item?._id)} > X </Button></div>
+            ) : ""
+            }
             <br />
             {(editIndex || editIndex === 0) ? <Button type="submit" className="add"  >Update</Button> : <Button type="submit" className="update">Add</Button>}
-            &nbsp;<Button onClick={() => DeleteAll()} className="deleteall">Delete All</Button>
+            &nbsp; <Button onClick={() => DeleteAll()} className="deleteall">Delete All</Button>
             {console.log(input, "input")}
-        </form>
+        </form >
     )
 }

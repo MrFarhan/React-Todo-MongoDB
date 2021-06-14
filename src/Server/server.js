@@ -10,7 +10,7 @@ app.use(cors())
 app.use(express.json())
 
 console.log("process " , process.env.MONGO_DB_PASS)
-mongoose.connect(uri)
+mongoose.connect(uri,{ useNewUrlParser:true, useCreateIndex:true,useUnifiedTopology:true,useFindAndModify:true})
 
 
 client.connect(err => {
