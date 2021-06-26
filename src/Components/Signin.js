@@ -1,16 +1,15 @@
 import React, { useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { Form, Button } from 'react-bootstrap'
-
+import GoogleLogin from 'react-google-login'
+require('dotenv').config()
 
 export const Signin = () => {
     const [uEmail, setuEmail] = useState()
     const [uPassword, setuPassword] = useState()
 
-
     let history = useHistory();
     const Login = () => {
-
 
         if (uEmail?.length < 4) {
             alert('Please enter an email address.');
@@ -27,6 +26,12 @@ export const Signin = () => {
         history.replace("/signup")
     }
 
+    const googleSuccess = (res) => {
+        console.log("Success while logging", res)
+    }
+    const googleFailure = (err) => {
+        console.log("Failure while logging" , err)
+    }
     return (
         <div className="signinComp">
             <Form>
@@ -41,6 +46,18 @@ export const Signin = () => {
                 </Form.Group>
 
                 <Button variant="primary" onClick={Login}>Sign in</Button> &nbsp;
+                &nbsp; <GoogleLogin
+                    clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}
+                    render={(renderProps) => (
+                        <Button onClick={renderProps.onClick} disabled={renderProps.disabled} variant="primary">
+                            Sign in with Google
+                        </Button>
+                    )}
+                    onSuccess={googleSuccess}
+                    onFailure={googleFailure}
+                    cookiePolicy="single_host_origin"
+
+                />&nbsp; &nbsp; &nbsp;
                 <Button variant="primary" onClick={signUp}>Sign up</Button>
 
             </Form>
