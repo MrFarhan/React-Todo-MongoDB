@@ -2,11 +2,16 @@ import React, { useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { Form, Button } from 'react-bootstrap'
 import GoogleLogin from 'react-google-login'
+import { profileAction } from '../Redux/actions'
+import { useDispatch, useSelector } from 'react-redux'
 require('dotenv').config()
 
 export const Signin = () => {
     const [uEmail, setuEmail] = useState()
     const [uPassword, setuPassword] = useState()
+    const dispatch = useDispatch()
+    const state = useSelector(state => state)
+    console.log("state is ", state)
 
     let history = useHistory();
     const Login = () => {
@@ -27,10 +32,20 @@ export const Signin = () => {
     }
 
     const googleSuccess = (res) => {
-        console.log("Success while logging", res)
+        const result = res?.profileObj;
+        const token = res?.tokenId;
+        try {
+            dispatch(profileAction(result))
+            history.push("/")
+
+        } catch (error) {
+            console.log("error in google login is : ", error)
+        }
     }
+
+
     const googleFailure = (err) => {
-        console.log("Failure while logging" , err)
+        console.log("Failure while logging", err)
     }
     return (
         <div className="signinComp">
