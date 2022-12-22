@@ -6,6 +6,7 @@ router.route("/create").post((req, res) => {
   const title = req.body.title;
   const temp = new Todo({ title: title });
   temp.save();
+  res.json({ success: true });
 });
 
 // router.route("/deleteAll").delete((req, res) => {
@@ -13,13 +14,16 @@ router.route("/create").post((req, res) => {
 
 // })
 
-router.route("/delete/:id").delete((req, res) => {
+router.route("/delete/:id").delete((req, response) => {
   const id = req.params.id;
 
   Todo.findByIdAndDelete({ _id: id }, (req, res, err) => {
     if (!err) {
+      response.json({ success: true });
       console.log("success fully deleted item");
     } else {
+      response.json({ success: false });
+
       console.log("error occured while deleting todo , ", err);
     }
   });

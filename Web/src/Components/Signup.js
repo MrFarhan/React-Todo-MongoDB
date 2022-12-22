@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Form, Button } from 'react-bootstrap'
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 
 
@@ -9,7 +9,7 @@ export const Signup = () => {
     const [uEmail, setuEmail] = useState("")
     const [uPassword, setuPassword] = useState("")
     const [confirmPassword, setconfirmPassword] = useState("")
-    let history = useHistory();
+    let navigate = useNavigate();
 
 
 
@@ -30,7 +30,7 @@ export const Signup = () => {
 
     }
     const Loginpush = () => {
-        history.replace("/signin")
+        navigate("/signin")
     }
 
 

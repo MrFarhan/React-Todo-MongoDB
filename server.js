@@ -7,7 +7,7 @@ const path = require("path");
 const PORT = process.env.PORT || 4000;
 
 const corsOptions = {
-  origin: "http://localhost:3000",
+  // origin: "http://localhost:4000",
   optionsSuccessStatus: 200,
 };
 
@@ -29,6 +29,7 @@ const connectToMongoDB = async () => {
     } catch (error) {
       console.log("error is", error);
     } finally {
+      console.log("finally")
       //   mongoose.connection.close();
     }
   });

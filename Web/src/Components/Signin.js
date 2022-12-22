@@ -1,10 +1,9 @@
 import React, { useState } from 'react'
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { Form, Button } from 'react-bootstrap'
 import GoogleLogin from 'react-google-login'
 import { profileAction } from '../Redux/actions'
 import { useDispatch, useSelector } from 'react-redux'
-require('dotenv').config()
 
 export const Signin = () => {
     const [uEmail, setuEmail] = useState()
@@ -13,7 +12,7 @@ export const Signin = () => {
     const state = useSelector(state => state)
     console.log("state is ", state)
 
-    let history = useHistory();
+    let navigate = useNavigate();
     const Login = () => {
 
         if (uEmail?.length < 4) {
@@ -28,7 +27,7 @@ export const Signin = () => {
 
 
     const signUp = () => {
-        history.replace("/signup")
+        navigate("/signup")
     }
 
     const googleSuccess = (res) => {
@@ -36,7 +35,7 @@ export const Signin = () => {
         const token = res?.tokenId;
         try {
             dispatch(profileAction(result))
-            history.push("/")
+            navigate.push("/")
 
         } catch (error) {
             console.log("error in google login is : ", error)
