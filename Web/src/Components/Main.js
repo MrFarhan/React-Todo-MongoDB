@@ -31,7 +31,11 @@ export const Main = () => {
           Logout
         </Button>
       ) : (
-        <Button variant="primary" onClick={Signin}>
+        <Button
+          variant="primary"
+          onClick={Signin}
+          style={{ marginBottom: "10px" }}
+        >
           Signin
         </Button>
       )}

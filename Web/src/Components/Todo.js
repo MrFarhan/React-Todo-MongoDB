@@ -8,9 +8,9 @@ export const Todo = () => {
   const [input, setInput] = useState();
   const [showArr, SetShowArr] = useState([]);
   const [editIndex, SetEditIndex] = useState();
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [removeIndex, setRemoveIndex] = useState();
-
+  console.log("showArr", showArr);
   const ShowArrFunc = () => {
     let temp = showArr?.length ? [...showArr] : [];
     if (input?.trim().length) {
@@ -66,7 +66,13 @@ export const Todo = () => {
           return res.json();
         }
       })
-      .then((resData) => SetShowArr(resData));
+      .then((resData) => {
+        setIsLoading(false);
+        SetShowArr(resData);
+      })
+      .catch((err) => {
+        setIsLoading(false);
+      });
   }, [input, removeIndex]);
   // }, [input, Remove, Update, DeleteAll]);
 
@@ -94,7 +100,7 @@ export const Todo = () => {
       <br />
       {showArr?.length
         ? Object.values(showArr).map((item, index) => (
-            <div key={index}>
+            <div key={index} style={{ marginBottom: "10px" }}>
               <span className="todoInputList">{item?.title}</span>
               <Button
                 type="button"

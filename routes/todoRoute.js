@@ -2,11 +2,15 @@ const express = require("express");
 const router = express.Router();
 const Todo = require("../models/todoModel");
 
-router.route("/create").post((req, res) => {
-  const title = req.body.title;
-  const temp = new Todo({ title: title });
-  temp.save();
+router.route("/").get((req, res) => {
   res.json({ success: true });
+});
+
+router.route("/create").post(async (req, res) => {
+  const title = req.body.title;
+  const temp = await new Todo({ title: title });
+  await temp.save();
+  return res.json({ success: true, todo: temp });
 });
 
 // router.route("/deleteAll").delete((req, res) => {
@@ -30,10 +34,13 @@ router.route("/delete/:id").delete((req, response) => {
 });
 
 router.route("/deleteall").delete(async (req, res) => {
-  await Todo.remove({}, (req, res, err) => {
+  await Todo.remove({}, (req, response, err) => {
     if (!err) {
+      res.json({ success: true });
       console.log("success fully deleted all");
     } else {
+      res.json({ success: false });
+
       console.log("error occured while deleting all todo , ", err);
     }
   });
@@ -46,18 +53,23 @@ router.route("/put/:id").put((req, res) => {
   Todo.findByIdAndUpdate(
     { _id: id },
     { $set: { title: title } },
-    (req, res, err) => {
+    (req, response, err) => {
       if (!err) {
+        res.json({ success: true });
         console.log("success fully updated Todo");
       } else {
+        res.json({ success: false });
+
         console.log("error occured while updating todo , ", err);
       }
     }
   );
 });
 
-router.route("/todos").get((req, res) => {
-  Todo.find().then((todo) => res.json(todo));
+router.route("/todos").get(async (req, res) => {
+  return await Todo.find().then((todo) => {
+    return res.json(todo);
+  });
 });
 
 module.exports = router;
