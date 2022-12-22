@@ -12,10 +12,10 @@ const corsOptions = {
 };
 
 // to redirect frontend
-// app.use(express.static(path.join(__dirname, "/Web/build")));
-// app.get("*", (req, res) => {
-//   res.sendFile(path.join(__dirname + "/Web/build/index.html"));
-// });
+app.use(express.static(path.join(__dirname, "/Web/build")));
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname + "/Web/build/index.html"));
+});
 
 app.use(cors(corsOptions));
 app.use(express.json());
